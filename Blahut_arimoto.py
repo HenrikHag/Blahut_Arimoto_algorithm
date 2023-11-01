@@ -5,14 +5,21 @@ import math
 
 # Define the transition probability distribution
 trans_prob_distr = np.array([[0.6, 0.4], [0.4, 0.6]])   # 2 dimensional array
-n = len(trans_prob_distr[0])
-m = len(trans_prob_distr[1])
+n = len(trans_prob_distr[0])    # Rows
+m = len(trans_prob_distr[1])    # Columns
 
 # Testing for the example, TO BE REMOVED LATER
 if (n!=2 or m!=2):
     print("Error, n is",n,"and m is",m)
 
 number_of_iterations = 1000
+# Initialization of the p vector of 1D and n length
+rng = np.random.default_rng()
+p = rng.random(n)   # n vector
+sum_p = sum(p)
+for i in range(n):
+    p[i] /= sum_p
+# print(p)
 
 
 
@@ -45,11 +52,7 @@ def compute_C(last_Q, last_p):
             result += last_p[i]*trans_prob_distr[i,j]*math.log2(last_Q[j,i]/last_p[i])
     return result
 
-def main(trans_prob_distr):
-    # "Random" initialization
-    p = np.array([0.4, 0.6])    # n vector
-    # initialization
-    Q = np.array([[0. for i in range(m)],[0. for i in range(n)]])   # m x n matrix
+def main(p):
     for i in range(number_of_iterations):
         Q = iterate_Q(p)    # Find new Q_ij from previous p_i
         p = iterate_p(Q)    # Find new p_i from previous Q_ij
@@ -58,4 +61,4 @@ def main(trans_prob_distr):
     return 0
 
 if __name__ == "__main__":
-    main(trans_prob_distr)
+    main(p)
