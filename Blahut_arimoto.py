@@ -1,28 +1,32 @@
-# Algorithm to approximate the channel capacity given a stationary transition probability distribution.
 import numpy as np
 import math
-# import random as rand
+
+######################################################
+### Change system and simulation configuration:
+######################################################
 
 # Define the transition probability distribution
 trans_prob_distr = np.array([[0.6, 0.4], [0.4, 0.6]])   # 2 dimensional array
+
+# Increase to increase accuracy
+number_of_iterations = 1000
+
+
+
+######################################################
+### Variables and functions:
+######################################################
+
+# Dimensions of problem defined from trans_prob_distr
 n = len(trans_prob_distr[0])    # Rows
 m = len(trans_prob_distr[1])    # Columns
 
-# Testing for the example, TO BE REMOVED LATER
-if (n!=2 or m!=2):
-    print("Error, n is",n,"and m is",m)
-
-number_of_iterations = 1000
 # Initialization of the p vector of 1D and n length
 rng = np.random.default_rng()
 p = rng.random(n)   # n vector
 sum_p = sum(p)
 for i in range(n):
     p[i] /= sum_p
-# print(p)
-
-
-
 
 # Iterates one step for Q given the last p
 def iterate_Q(previous_p):
