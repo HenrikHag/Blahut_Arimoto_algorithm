@@ -15,11 +15,11 @@ if PLOT_CAPACITY_OVER_TIME:
 
 # Choose the number of iterations the algorithm will run
 # Increase to increase accuracy
-number_of_iterations = 10000
+number_of_iterations = 1000
 
 # Define the transition probability distribution
 # Choose from example_A to example_E from Example_arrays.py
-trans_prob_distr = example_E
+trans_prob_distr = example_A
 
 
 
@@ -41,12 +41,12 @@ for i in range(n):
 # Iterates one step for Q given the last p
 def iterate_Q(previous_p):
     result = np.array([[0. for columns in range(n)] for rows in range(m)])
-    for j in range(m):      # For each column
+    for j in range(m):      # For each row
         divisor = sum([previous_p[k]*trans_prob_distr[k,j] for k in range(n)])
         if divisor == 0.:
             print("Divisor is 0 error in iterate_Q")
             exit()
-        for i in range(n):  # For each row
+        for i in range(n):  # For each column
             result[j,i] = previous_p[i]*trans_prob_distr[i,j]/divisor
     return result
 
@@ -67,12 +67,13 @@ def compute_C(last_Q, last_p):
     for i in range(n):      # Row
         for j in range(m):  # Column
             if trans_prob_distr[i,j] > 0. and last_p[i] > 0.:
-                result = last_p[i]*trans_prob_distr[i,j]*math.log2(last_Q[j,i]/last_p[i])
+                result += last_p[i]*trans_prob_distr[i,j]*math.log2(last_Q[j,i]/last_p[i])
     return result
 
 def main(p):
     if PLOT_CAPACITY_OVER_TIME:
         capacity_over_time = []
+    # Q = np.array([])
     for i in range(number_of_iterations):
         Q = iterate_Q(p)    # Find new Q_ij from previous p_i
         # print(f"p[{i}]: {np.reshape(p,2)}") # TEST
@@ -92,4 +93,4 @@ def main(p):
 
 if __name__ == "__main__":
     main(p)
-    # print(1.+(0.6*math.log2(0.6)+0.4*math.log2(0.4))) # Formula for a symmetric DMC
+    print(1.+(0.6*math.log2(0.6)+0.4*math.log2(0.4))) # Formula for a symmetric DMC
