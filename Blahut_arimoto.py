@@ -38,8 +38,13 @@ sum_p = sum(p)
 for i in range(n):
     p[i] /= sum_p
 
-# Iterates one step for Q given the last p
 def iterate_Q(previous_p):
+    """
+    Iterates one step for `Q` given the last `p`
+    previous_p: The `p` from the previous iteration or the initial `p`
+
+    Return new iteration of `Q`, a (m x n) 2D numpy array
+    """
     result = np.array([[0. for columns in range(n)] for rows in range(m)])
     for j in range(m):      # For each row
         divisor = sum([previous_p[k]*trans_prob_distr[k,j] for k in range(n)])
@@ -50,8 +55,13 @@ def iterate_Q(previous_p):
             result[j,i] = previous_p[i]*trans_prob_distr[i,j]/divisor
     return result
 
-# Iterates one step for p given the last Q
 def iterate_p(previous_Q):
+    """
+    Iterates one step for `p` given the last `Q`
+    previous_Q: The `Q` from the previous iteration
+    
+    Return new iteration of `p`, a (n) 1D numpy array
+    """
     result = np.array([1. for i in range(n)])
     for i in range(n):
         for j in range(m):
@@ -61,8 +71,10 @@ def iterate_p(previous_Q):
         result[i] /= normalization
     return result
 
-# Computes the capacity given the last Q and p from the algorithm
 def compute_C(last_Q, last_p):
+    """
+    Computes the capacity given the last `Q` and `p` from the Blahut-Arimoto algorithm.
+    """
     result = 0
     for i in range(n):      # Row
         for j in range(m):  # Column
